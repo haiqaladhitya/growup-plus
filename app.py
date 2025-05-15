@@ -7,6 +7,26 @@ import plotly.express as px
 from streamlit_extras.metric_cards import style_metric_cards
 
 #Fungsi Bantu
+def compute_ideal_height(age_months: float, gender: str) -> float:
+    """
+    Interpolasi median tinggi badan (cm) berdasarkan usia.
+    Data median untuk usia 1–5 tahun (tahun -> cm) [3]:
+    {1:76, 2:88, 3:95, 4:103, 5:110}.
+    Untuk <12 bulan diasumsikan linear dari 50 cm (lahir) ke 76 cm (1 tahun).
+    """
+    # median tiap tahun
+    med = {1:76, 2:88, 3:95, 4:103, 5:110}
+    if age_months < 12:
+        return round(50 + (26/12)*age_months, 1)  # 50→76 cm
+    else:
+        yrs = age_months / 12
+        y0 = int(np.floor(yrs))
+        y1 = min(y0 + 1, 5)
+        h0 = med.get(y0, med[1])
+        h1 = med[y1]
+        frac = yrs - y0
+        return round(h0 + (h1 - h0) * frac, 1)
+
 def compute_ideal_weight(age_months: float) -> float:
     """
     Hitung Berat Badan Ideal (BBI) berdasarkan umur anak (bulan),
@@ -107,6 +127,9 @@ if st.session_state.get('analyzed'):
     
     # Tampilkan hasil dalam kolom
     col1, col2 = st.columns(2)
+    tinggi_aktual = tinggi
+    tinggi_ideal  = compute_ideal_height(umur, gender)
+    selisih_tg    = round(tinggi_ideal - tinggi_aktual, 1)
     
     with col1:
         st.markdown("### 📏 Hasil Prediksi Stunting")
@@ -115,14 +138,44 @@ if st.session_state.get('analyzed'):
             st.progress((pred_s + 1)/4, text="Tingkat Risiko")
             
             # Grafik pertumbuhan
-            df_growth = pd.DataFrame({
-                'Parameter': ['Umur', 'Tinggi', 'Berat'],
-                'Nilai': [umur, tinggi, berat]
+            # Kasus: hampir ideal
+        if abs(selisih_tg) < 0.5:
+            df_tg = pd.DataFrame({"Kategori":["Tinggi Ideal Terpenuhi"], "Nilai":[1]})
+            fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
+                           color_discrete_sequence=[theme['success']],
+                           title="Tinggi Aktual Sesuai Ideal")
+            st.success("✅ Tinggi badan sudah sesuai dengan ideal.")
+        
+        # Kasus: di bawah ideal
+        elif selisih_tg > 0:
+            df_tg = pd.DataFrame({
+                "Kategori":["Tinggi Aktual","Menuju Tinggi Ideal"],
+                "Nilai":[tinggi_aktual, selisih_tg]
             })
-            
-            fig = px.bar(df_growth, x='Parameter', y='Nilai', 
-                        color='Parameter', color_discrete_sequence=[theme['primary'], theme['secondary'], theme['warning']])
-            st.plotly_chart(fig, use_container_width=True)
+            fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
+                           color_discrete_map={
+                             "Tinggi Aktual": theme['warning'],
+                             "Menuju Tinggi Ideal": theme['secondary']
+                           },
+                           title="Progres Menuju Tinggi Ideal")
+            st.info(f"⚠️ Perlu tambah tinggi {selisih_tg} cm untuk mencapai ideal ({tinggi_ideal} cm).")
+        
+        # Kasus: di atas ideal
+        else:
+            kelebihan = abs(selisih_tg)
+            df_tg = pd.DataFrame({
+                "Kategori":["Tinggi Ideal","Kelebihan Tinggi"],
+                "Nilai":[tinggi_ideal, kelebihan]
+            })
+            fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
+                           color_discrete_map={
+                             "Tinggi Ideal": theme['success'],
+                             "Kelebihan Tinggi": theme['danger']
+                           },
+                           title="Perbandingan Tinggi Ideal vs Kelebihan")
+            st.warning(f"⚠️ Anak memiliki kelebihan tinggi {kelebihan} cm dari ideal ({tinggi_ideal} cm).")
+        
+        st.plotly_chart(fig_t, use_container_width=True)
 
     with col2:
         st.markdown("### ⚖️ Hasil Prediksi Wasting")
@@ -204,7 +257,7 @@ if st.session_state.get('analyzed'):
             """)
      # Data historis (contoh)
     st.markdown("---")
-    st.markdown("### 📈 Riwayat Pertumbuhan")
+    st.markdown("### 📈 Prediksi Pertumbuhan")
     with st.container(height=300):
         # Contoh data historis
         df_history = pd.DataFrame({
