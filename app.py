@@ -13,8 +13,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-st.title("GrowUp+")
-st.markdown("Pemantauan tumbuh kembang anak untuk deteksi risiko stunting dan gizi buruk.")
+
 
 # Load model
 @st.cache_resource
