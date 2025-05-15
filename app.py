@@ -51,27 +51,13 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # Sidebar untuk input data
-with st.sidebar:
-    st.header("📋 Masukkan Data Anak")
-    st.markdown("---")
-    umur = st.slider("Umur (bulan)", 0, 60, 12,
-                    help="Usia anak dalam bulan")
+with st.sidebar.form("input_form"):
+    st.header("📋 Data Anak")
+    umur   = st.slider("Umur (bulan)", 0, 60, 12)
     gender = st.selectbox("Jenis Kelamin", ["Laki-laki", "Perempuan"])
-    tinggi = st.number_input("Tinggi Badan (cm)", 40.0, 150.0, 75.0, step=0.1,
-                           format="%.1f")
-    berat = st.number_input("Berat Badan (kg)", 3.0, 50.0, 10.0, step=0.1,
-                          format="%.1f")
-    st.markdown("---")
-    
-    if "analyzed" not in st.session_state:
-    st.session_state.analyzed = False
-
-    if st.sidebar.button("Mulai Analisis"):
-    st.session_state.analyzed = True
-
-    if st.session_state.analyzed:
-    # tampilkan pie chart berdasarkan nilai berat terkini
-
+    tinggi = st.number_input("Tinggi Badan (cm)", 40.0, 150.0, 75.0)
+    berat  = st.number_input("Berat Badan (kg)", 3.0, 50.0, 10.0)
+    submitted = st.form_submit_button("🚀 Mulai Analisis")
 
 # Konten utama
 if st.session_state.get('analyzed'):
