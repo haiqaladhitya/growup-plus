@@ -133,37 +133,53 @@ if st.session_state.get('analyzed'):
             # Grafik perbandingan
             # Hitung Berat Ideal sesuai umur
             berat_ideal = compute_ideal_weight(umur)
-            # Cek apakah berat aktual ≈ berat ideal (toleransi 0.1 kg)
-            if abs(berat - berat_ideal) < 0.1:
-                # Satu irisan penuh untuk menunjukkan kecocokan
+            selisih = round(berat_ideal - berat, 1)
+
+            # Kasus 1: berat hampir ideal
+            if abs(selisih) < 0.1:
                 df2 = pd.DataFrame({
                     "Kategori": ["Berat Ideal Terpenuhi"],
                     "Nilai":    [1]
                 })
                 fig2 = px.pie(
-                    df2,
-                    names="Kategori",
-                    values="Nilai",
+                    df2, names="Kategori", values="Nilai",
                     color_discrete_sequence=[theme['success']],
-                    title="Berat Aktual Sesuai dengan Berat Ideal"
+                    title="Berat Aktual Sesuai Ideal"
                 )
                 st.success("✅ Berat aktual sudah sesuai dengan berat ideal.")
-            else:
-                # Dua irisan: ideal vs aktual
+        
+            # Kasus 2: berat di bawah ideal
+            elif selisih > 0:
                 df2 = pd.DataFrame({
-                    "Kategori": ["Berat Ideal", "Berat Aktual"],
-                    "Nilai":    [berat_ideal, berat]
+                    "Kategori": ["Berat Aktual", "Menuju Berat Ideal"],
+                    "Nilai":    [berat, selisih]
                 })
                 fig2 = px.pie(
-                    df2,
-                    names="Kategori",
-                    values="Nilai",
+                    df2, names="Kategori", values="Nilai",
+                    color_discrete_map={
+                        "Berat Aktual": theme['warning'],
+                        "Menuju Berat Ideal": theme['secondary']
+                    },
+                    title="Progres Menuju Berat Ideal"
+                )
+                st.info(f"⚠️ Anak perlu menambah {selisih} kg lagi untuk mencapai berat ideal ({berat_ideal} kg).")
+        
+            # Kasus 3: berat di atas ideal (kelebihan)
+            else:
+                kelebihan = abs(selisih)
+                df2 = pd.DataFrame({
+                    "Kategori": ["Berat Ideal", "Kelebihan Berat"],
+                    "Nilai":    [berat_ideal, kelebihan]
+                })
+                fig2 = px.pie(
+                    df2, names="Kategori", values="Nilai",
                     color_discrete_map={
                         "Berat Ideal": theme['success'],
-                        "Berat Aktual": theme['danger']
+                        "Kelebihan Berat": theme['danger']
                     },
-                    title="Perbandingan Berat Ideal vs Aktual"
+                    title="Perbandingan Berat Ideal vs Kelebihan"
                 )
+                st.warning(f"⚠️ Anak memiliki kelebihan berat {kelebihan} kg dari ideal ({berat_ideal} kg).")
         
             st.plotly_chart(fig2, use_container_width=True)
     # Rekomendasi
