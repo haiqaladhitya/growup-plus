@@ -125,28 +125,22 @@ if st.session_state.get('analyzed'):
             st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-    st.subheader("⚖️ Prediksi Wasting")
-    st.markdown(f"**{labs_w[pw]}**")
-    st.progress((pw + 1) / 4, text="Tingkat Risiko")
-
-    # Hitung Berat Ideal menurut Burger’s formula
-    berat_ideal = compute_ideal_weight(umur)
-    df2 = pd.DataFrame({
-        "Kategori": ["Berat Ideal", "Berat Aktual"],
-        "Nilai":    [berat_ideal, berat]
-    })
-    fig2 = px.pie(
-        df2,
-        names="Kategori",
-        values="Nilai",
-        color_discrete_map={
-            "Berat Ideal": theme['success'],
-            "Berat Aktual": theme['danger']
-        },
-        title="Perbandingan Berat Ideal vs Aktual"
-    )
-    st.plotly_chart(fig2, use_container_width=True)
-
+        st.markdown("### ⚖️ Hasil Prediksi Wasting")
+        with st.container(border=True):
+            st.markdown(f"**Kategori:** {results['wasting']['labels'][pred_w]}")
+            st.progress((pred_w + 1)/4, text="Tingkat Risiko")
+            
+            # Grafik perbandingan
+            # Hitung Berat Ideal sesuai umur
+            berat_ideal = compute_ideal_weight(umur)
+            df_comparison = pd.DataFrame({
+                'Parameter': ['Berat Ideal', 'Berat Aktual'],
+                'Nilai': [berat_ideal, berat]  # Contoh perhitungan sederhana
+            })
+            
+            fig = px.pie(df_comparison, names='Parameter', values='Nilai',
+                        color_discrete_sequence=[theme['success'], theme['danger']])
+            st.plotly_chart(fig, use_container_width=True)
 
     # Rekomendasi
     st.markdown("---")
@@ -204,7 +198,7 @@ else:
         <ul style='list-style: none; padding: 0;'>
             <li>✅ Prediksi risiko stunting</li>
             <li>✅ Deteksi masalah gizi (wasting)</li>
-            <li>✅ Rekomendasi medis berbasis Machine</li>
+            <li>✅ Rekomendasi medis berbasis AI</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -214,7 +208,7 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; padding: 1rem; color: #666;'>
     <p>© 2024 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak</p>
-    <p>Dikembangkan dengan ❤️ oleh Kelompok 22</p>
+    <p>Dikembangkan dengan ❤️ oleh Tim Medis</p>
 </div>
 """, unsafe_allow_html=True)
 
