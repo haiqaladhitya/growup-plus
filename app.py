@@ -139,7 +139,7 @@ if st.session_state.get('analyzed'):
             
             # Grafik pertumbuhan
             # Kasus: hampir ideal
-        if abs(selisih_tg) < 1:
+        if abs(selisih_tg) < 0.1:
             df_tg = pd.DataFrame({"Kategori":["Tinggi Ideal Terpenuhi"], "Nilai":[1]})
             fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
                            color_discrete_sequence=[theme['success']],
