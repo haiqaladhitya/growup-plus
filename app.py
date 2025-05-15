@@ -52,7 +52,7 @@ if submitted:
         elif result_s == "Tall":
             st.info("Tinggi anak di atas rata-rata untuk usianya.")
         else:
-            st.success("Kondisi gizi anak relatif normal.")
+            st.success("Kondisi anak relatif normal.")
 
     with tab2:
         st.subheader("Hasil Prediksi Wasting")
