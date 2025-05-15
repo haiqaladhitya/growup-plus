@@ -191,7 +191,7 @@ else:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; padding: 1rem; color: #666;'>
-    <p>© 2024 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak</p>
+    <p>© 2025 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak</p>
     <p>Dikembangkan dengan ❤️ oleh Kelompok 22</p>
 </div>
 """, unsafe_allow_html=True)
