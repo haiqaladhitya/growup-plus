@@ -133,15 +133,39 @@ if st.session_state.get('analyzed'):
             # Grafik perbandingan
             # Hitung Berat Ideal sesuai umur
             berat_ideal = compute_ideal_weight(umur)
-            df_comparison = pd.DataFrame({
-                'Parameter': ['Berat Ideal', 'Berat Aktual'],
-                'Nilai': [berat_ideal, berat]  # Contoh perhitungan sederhana
-            })
-            
-            fig = px.pie(df_comparison, names='Parameter', values='Nilai',
-                        color_discrete_sequence=[theme['success'], theme['danger']])
-            st.plotly_chart(fig, use_container_width=True)
-
+            # Cek apakah berat aktual ≈ berat ideal (toleransi 0.1 kg)
+            if abs(berat - berat_ideal) < 0.1:
+                # Satu irisan penuh untuk menunjukkan kecocokan
+                df2 = pd.DataFrame({
+                    "Kategori": ["Berat Ideal Terpenuhi"],
+                    "Nilai":    [1]
+                })
+                fig2 = px.pie(
+                    df2,
+                    names="Kategori",
+                    values="Nilai",
+                    color_discrete_sequence=[theme['success']],
+                    title="Berat Aktual Sesuai dengan Berat Ideal"
+                )
+                st.success("✅ Berat aktual sudah sesuai dengan berat ideal.")
+            else:
+                # Dua irisan: ideal vs aktual
+                df2 = pd.DataFrame({
+                    "Kategori": ["Berat Ideal", "Berat Aktual"],
+                    "Nilai":    [berat_ideal, berat]
+                })
+                fig2 = px.pie(
+                    df2,
+                    names="Kategori",
+                    values="Nilai",
+                    color_discrete_map={
+                        "Berat Ideal": theme['success'],
+                        "Berat Aktual": theme['danger']
+                    },
+                    title="Perbandingan Berat Ideal vs Aktual"
+                )
+        
+            st.plotly_chart(fig2, use_container_width=True)
     # Rekomendasi
     st.markdown("---")
     with st.expander("📌 Rekomendasi Medis", expanded=True):
