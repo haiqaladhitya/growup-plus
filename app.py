@@ -182,7 +182,7 @@ else:
         <ul style='list-style: none; padding: 0;'>
             <li>✅ Prediksi risiko stunting</li>
             <li>✅ Deteksi masalah gizi (wasting)</li>
-            <li>✅ Rekomendasi medis berbasis AI</li>
+            <li>✅ Rekomendasi medis berbasis Machine Learning</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -192,7 +192,7 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center; padding: 1rem; color: #666;'>
     <p>© 2024 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak</p>
-    <p>Dikembangkan dengan ❤️ oleh Tim Medis</p>
+    <p>Dikembangkan dengan ❤️ oleh Kelompok 22</p>
 </div>
 """, unsafe_allow_html=True)
 
