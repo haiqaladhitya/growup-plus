@@ -51,6 +51,8 @@ if submitted:
             st.warning("Anak terindikasi stunting. Segera konsultasikan dengan tenaga medis.")
         elif result_s == "Tall":
             st.info("Tinggi anak di atas rata-rata untuk usianya.")
+        else:
+            st.success("Kondisi gizi anak relatif normal.")
 
     with tab2:
         st.subheader("Hasil Prediksi Wasting")
