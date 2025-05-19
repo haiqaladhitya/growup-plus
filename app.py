@@ -89,7 +89,7 @@ st.markdown(f"""
 with st.sidebar:
     st.header("📋 Masukkan Data Anak")
     st.markdown("---")
-    umur = st.slider("Umur (bulan)", 1, 60, 12,
+    umur = st.slider("Umur (bulan)", 0, 60, 12,
                     help="Usia anak dalam bulan")
     gender = st.selectbox("Jenis Kelamin", ["Laki-laki", "Perempuan"])
     tinggi = st.number_input("Tinggi Badan (cm)", 40.0, 150.0, 75.0, step=0.1,
