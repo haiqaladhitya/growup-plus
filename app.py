@@ -255,31 +255,6 @@ if st.session_state.get('analyzed'):
             - Pemberian gizi seimbang
             - Stimulasi fisik sesuai usia
             """)
-     # Data historis (contoh)
-    st.markdown("---")
-    st.markdown("### 📈 Prediksi Pertumbuhan")
-    with st.container(height=300):
-        # Contoh data historis
-        df_history = pd.DataFrame({
-            'Bulan': [umur-2, umur-1, umur],
-            'Tinggi': [tinggi-5, tinggi-2, tinggi],
-            'Berat': [berat-1, berat-0.5, berat]
-        })
-        
-        tab1, tab2 = st.tabs(["Tinggi Badan", "Berat Badan"])
-        
-        with tab1:
-            fig = px.line(df_history, x='Bulan', y='Tinggi', 
-                         markers=True, title="Perkembangan Tinggi Badan",
-                         color_discrete_sequence=[theme['primary']])
-            st.plotly_chart(fig, use_container_width=True)
-            
-        with tab2:
-            fig = px.line(df_history, x='Bulan', y='Berat',
-                         markers=True, title="Perkembangan Berat Badan",
-                         color_discrete_sequence=[theme['warning']])
-            st.plotly_chart(fig, use_container_width=True)
-
 else:
     # Tampilan awal
     st.markdown("""
