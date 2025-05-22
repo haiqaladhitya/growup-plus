@@ -41,6 +41,31 @@ def compute_ideal_weight(age_months: float) -> float:
         bbi = (age_years * 2) + 8
     return round(bbi, 1)
 
+def plot_progress(actual, ideal, label, unit):
+    diff = round(ideal - actual, 1)
+    # ideal jika selisih kecil
+    if abs(diff) < 0.1:
+        df = pd.DataFrame({label: ["Ideal"], "Nilai": [1]})
+        box, color = st.success, [theme['success']]
+        msg = f"✅ {label} sudah ideal ({ideal} {unit})."
+    else:
+        # split nilai untuk pie
+        if diff > 0:
+            df = pd.DataFrame({label: ["Actual", "Needed"], "Nilai":[actual, diff]})
+        else:
+            df = pd.DataFrame({label: ["Ideal", "Excess"],  "Nilai":[ideal, abs(diff)]})
+        box, color = st.warning, [theme['success'], theme['warning']]
+        verb = "tambah" if diff>0 else "kurangi"
+        msg = f"⚠️ Perlu {verb} {abs(diff)} {unit} untuk capai ideal ({ideal} {unit})."
+
+    box(msg)
+    fig = px.pie(
+        df, names=label, values="Nilai",
+        color_discrete_sequence=color
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
 # mapping rekomendasi berdasarkan (Stunting, Wasting)
 rekom_map = {
     ("Normal",           "Normal"):           "Anak berada dalam kondisi tumbuh kembang yang baik. Pertahankan pola makan bergizi seimbang (karbohidrat, protein hewani dan nabati, buah, sayur), ASI eksklusif hingga 6 bulan, dan pantau tumbuh kembang secara berkala di posyandu/puskesmas.",
@@ -179,105 +204,17 @@ if st.session_state.get('analyzed'):
         with st.container(border=True):
             st.markdown(f"**Kategori:** {results['stunting']['labels'][pred_s]}")
             st.progress((pred_s + 1)/4, text="Tingkat Risiko")
-            
-            # Grafik pertumbuhan
-            # Kasus: hampir ideal
-        if abs(selisih_tg) < 0.1:
-            df_tg = pd.DataFrame({"Kategori":["Tinggi Ideal Terpenuhi"], "Nilai":[1]})
-            fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
-                           color_discrete_sequence=[theme['success']],
-                           title="Tinggi Aktual Sesuai Ideal")
-            st.success("✅ Tinggi badan sudah sesuai dengan ideal.")
-        
-        # Kasus: di bawah ideal
-        elif selisih_tg > 0:
-            df_tg = pd.DataFrame({
-                "Kategori":["Tinggi Aktual","Menuju Tinggi Ideal"],
-                "Nilai":[tinggi_aktual, selisih_tg]
-            })
-            fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
-                           color_discrete_map={
-                             "Tinggi Aktual": theme['success'],
-                             "Menuju Tinggi Ideal": theme['warning']
-                           },
-                           title="Progres Menuju Tinggi Ideal")
-            st.info(f"⚠️ Perlu tambah tinggi {selisih_tg} cm untuk mencapai ideal ({tinggi_ideal} cm).")
-        
-        # Kasus: di atas ideal
-        else:
-            kelebihan = abs(selisih_tg)
-            df_tg = pd.DataFrame({
-                "Kategori":["Tinggi Ideal","Kelebihan Tinggi"],
-                "Nilai":[tinggi_ideal, kelebihan]
-            })
-            fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
-                           color_discrete_map={
-                             "Tinggi Ideal": theme['success'],
-                             "Kelebihan Tinggi": theme['warning']
-                           },
-                           title="Perbandingan Tinggi Ideal vs Kelebihan")
-            st.warning(f"⚠️ Anak memiliki kelebihan tinggi {kelebihan} cm dari ideal ({tinggi_ideal} cm).")
-        
-        st.plotly_chart(fig_t, use_container_width=True)
+        # panggil helper
+        plot_progress(tinggi, tinggi_ideal, "Tinggi", "cm")
+
 
     with col2:
         st.markdown("### ⚖️ Hasil Prediksi Wasting")
         with st.container(border=True):
             st.markdown(f"**Kategori:** {results['wasting']['labels'][pred_w]}")
             st.progress((pred_w + 1)/4, text="Tingkat Risiko")
-            
-            # Grafik perbandingan
-            # Hitung Berat Ideal sesuai umur
-            berat_ideal = compute_ideal_weight(umur)
-            selisih = round(berat_ideal - berat, 1)
-
-            # Kasus 1: berat hampir ideal
-            if abs(selisih) < 0.1:
-                df2 = pd.DataFrame({
-                    "Kategori": ["Berat Ideal Terpenuhi"],
-                    "Nilai":    [1]
-                })
-                fig2 = px.pie(
-                    df2, names="Kategori", values="Nilai",
-                    color_discrete_sequence=[theme['success']],
-                    title="Berat Aktual Sesuai Ideal"
-                )
-                st.success("✅ Berat aktual sudah sesuai dengan berat ideal.")
-        
-            # Kasus 2: berat di bawah ideal
-            elif selisih > 0:
-                df2 = pd.DataFrame({
-                    "Kategori": ["Berat Aktual", "Menuju Berat Ideal"],
-                    "Nilai":    [berat, selisih]
-                })
-                fig2 = px.pie(
-                    df2, names="Kategori", values="Nilai",
-                    color_discrete_map={
-                        "Berat Aktual": theme['success'],
-                        "Menuju Berat Ideal": theme['warning']
-                    },
-                    title="Progres Menuju Berat Ideal"
-                )
-                st.info(f"⚠️ Anak perlu menambah {selisih} kg lagi untuk mencapai berat ideal ({berat_ideal} kg).")
-        
-            # Kasus 3: berat di atas ideal (kelebihan)
-            else:
-                kelebihan = abs(selisih)
-                df2 = pd.DataFrame({
-                    "Kategori": ["Berat Ideal", "Kelebihan Berat"],
-                    "Nilai":    [berat_ideal, kelebihan]
-                })
-                fig2 = px.pie(
-                    df2, names="Kategori", values="Nilai",
-                    color_discrete_map={
-                        "Berat Ideal": theme['success'],
-                        "Kelebihan Berat": theme['warning']
-                    },
-                    title="Perbandingan Berat Ideal vs Kelebihan"
-                )
-                st.warning(f"⚠️ Anak memiliki kelebihan berat {kelebihan} kg dari ideal ({berat_ideal} kg).")
-        
-            st.plotly_chart(fig2, use_container_width=True)
+            # panggil helper
+            plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
     # setelah Anda menghitung pred_s dan pred_w serta memiliki:
     stunting_label = results['stunting']['labels'][pred_s]
     wasting_label  = results['wasting']['labels'][pred_w]
