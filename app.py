@@ -82,7 +82,7 @@ st.markdown(f"""
             padding: 1rem;
         }}
     </style>
-    <h1 class="title">👶 GrowUp+ - Pemantauan Tumbuh Kembang Anak</h1>
+    <h1 class="title">👶 Selamat Datang di GrowUp+</h1>
 """, unsafe_allow_html=True)
 
 # Sidebar untuk input data
@@ -259,13 +259,13 @@ else:
     # Tampilan awal
     st.markdown("""
     <div style='text-align: center; padding: 5rem;'>
-        <h3 style='color: #2E86C1;'>Selamat Datang di GrowUp+</h3>
-        <p>Masukkan data anak di sidebar kiri untuk mulai analisis</p>
-        <p>🩺 Aplikasi ini membantu memantau perkembangan anak dengan:</p>
+        <h3 style='color: #2E86C1;'>Platform Deteksi Dini Indikasi Stunting dan Gizi Buruk pada Anak</h3>
+        <p>Untuk memulai, silakan masukkan data anak Anda pada sidebar di sebelah kiri.</p>
+        <p>GrowUp+ akan membantu Anda memantau tumbuh kembang anak dengan menyediakan: </p>
         <ul style='list-style: none; padding: 0;'>
-            <li>✅ Prediksi risiko stunting</li>
-            <li>✅ Deteksi masalah gizi (wasting)</li>
-            <li>✅ Rekomendasi medis berbasis Machine Learning</li>
+            <li>✅ Prediksi indikasi stunting </li>
+            <li>✅ Deteksi masalah gizi (kurang/buruk) </li>
+            <li>✅ Rekomendasi medis otomatis berbasis Machine Learning</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -274,7 +274,7 @@ else:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; padding: 1rem; color: #666;'>
-    <p>© 2024 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak</p>
+    <p>© 2025 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak</p>
     <p>Dikembangkan dengan ❤️ oleh Kelompok 22</p>
 </div>
 """, unsafe_allow_html=True)
