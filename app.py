@@ -258,13 +258,25 @@ if st.session_state.get('analyzed'):
 else:
     # Tampilan awal
     st.markdown("""
-    <div style='text-align: center; padding: 5rem;'>
-        <h3 style='color: #2E86C1;'>Platform Deteksi Dini Indikasi Stunting dan Gizi Buruk pada Anak</h3>
-        <p>Untuk memulai, silakan masukkan data anak Anda pada sidebar di sebelah kiri.</p>
-        <p>GrowUp+ akan membantu Anda memantau tumbuh kembang anak dengan menyediakan: </p>
-        <ul style='list-style: none; padding: 0;'>
-            <li>✅ Prediksi indikasi stunting </li>
-            <li>✅ Deteksi masalah gizi (kurang/buruk) </li>
+    <div style="text-align: center; padding: 5rem;">
+        <h3 style="color: #2E86C1;">
+          Platform Deteksi Dini Indikasi Stunting dan Gizi Buruk pada Anak
+        </h3>
+        <p>
+          Untuk memulai, silakan masukkan data anak Anda pada sidebar di sebelah kiri.
+        </p>
+        <p>
+          GrowUp+ akan membantu Anda memantau tumbuh kembang anak dengan menyediakan:
+        </p>
+        <ul style="
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            display: inline-block;
+            margin: auto;
+        ">
+            <li>✅ Prediksi indikasi stunting</li>
+            <li>✅ Deteksi masalah gizi (kurang/buruk)</li>
             <li>✅ Rekomendasi medis otomatis berbasis Machine Learning</li>
         </ul>
     </div>
