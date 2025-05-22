@@ -342,7 +342,7 @@ st.markdown(f"""
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }}
         .stPlotlyChart {{
-            border: 1px solid {theme['secondary']};
+            border: 1px solid {theme['warning']};
             border-radius: 10px;
             padding: 1rem;
         }}
