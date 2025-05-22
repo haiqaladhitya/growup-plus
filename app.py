@@ -87,7 +87,7 @@ st.markdown(f"""
 
 # Sidebar untuk input data
 with st.sidebar:
-    st.header("📋 Masukkan Data Anak")
+    st.header("📋 Silahkan masukkan data anak")
     st.markdown("---")
     umur = st.number_input(
         "Umur (bulan)", 
@@ -193,7 +193,7 @@ if st.session_state.get('analyzed'):
             fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
                            color_discrete_map={
                              "Tinggi Ideal": theme['success'],
-                             "Kelebihan Tinggi": theme['danger']
+                             "Kelebihan Tinggi": theme['warning']
                            },
                            title="Perbandingan Tinggi Ideal vs Kelebihan")
             st.warning(f"⚠️ Anak memiliki kelebihan tinggi {kelebihan} cm dari ideal ({tinggi_ideal} cm).")
@@ -251,7 +251,7 @@ if st.session_state.get('analyzed'):
                     df2, names="Kategori", values="Nilai",
                     color_discrete_map={
                         "Berat Ideal": theme['success'],
-                        "Kelebihan Berat": theme['danger']
+                        "Kelebihan Berat": theme['warning']
                     },
                     title="Perbandingan Berat Ideal vs Kelebihan"
                 )
