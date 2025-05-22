@@ -82,7 +82,7 @@ st.markdown(f"""
             padding: 1rem;
         }}
     </style>
-    <h1 class="title">👶 Selamat Datang di GrowUp+</h1>
+    <h1 class="title">👶 GrowUp+</h1>
 """, unsafe_allow_html=True)
 
 # Sidebar untuk input data
@@ -177,8 +177,8 @@ if st.session_state.get('analyzed'):
             })
             fig_t = px.pie(df_tg, names="Kategori", values="Nilai",
                            color_discrete_map={
-                             "Tinggi Aktual": theme['warning'],
-                             "Menuju Tinggi Ideal": theme['secondary']
+                             "Tinggi Aktual": theme['success'],
+                             "Menuju Tinggi Ideal": theme['warning']
                            },
                            title="Progres Menuju Tinggi Ideal")
             st.info(f"⚠️ Perlu tambah tinggi {selisih_tg} cm untuk mencapai ideal ({tinggi_ideal} cm).")
@@ -233,8 +233,8 @@ if st.session_state.get('analyzed'):
                 fig2 = px.pie(
                     df2, names="Kategori", values="Nilai",
                     color_discrete_map={
-                        "Berat Aktual": theme['warning'],
-                        "Menuju Berat Ideal": theme['secondary']
+                        "Berat Aktual": theme['success'],
+                        "Menuju Berat Ideal": theme['warning']
                     },
                     title="Progres Menuju Berat Ideal"
                 )
