@@ -41,6 +41,26 @@ def compute_ideal_weight(age_months: float) -> float:
         bbi = (age_years * 2) + 8
     return round(bbi, 1)
 
+# mapping rekomendasi berdasarkan (Stunting, Wasting)
+rekom_map = {
+    ("Normal",           "Normal"):           "Anak berada dalam kondisi tumbuh kembang yang baik. Pertahankan pola makan bergizi seimbang (karbohidrat, protein hewani dan nabati, buah, sayur), ASI eksklusif hingga 6 bulan, dan pantau tumbuh kembang secara berkala di posyandu/puskesmas.",
+    ("Normal",           "Wasted"):           "Anak mengalami kekurangan berat badan relatif terhadap tinggi badan. Tingkatkan asupan energi dan protein (telur, ikan, daging, susu). Berikan makanan bergizi padat energi secara lebih sering (3 kali makan utama dan 2 kali camilan sehat). Segera konsultasikan ke tenaga kesehatan.",
+    ("Normal",           "Severely Wasted"):  "Kondisi gizi anak tergolong berat. Segera bawa ke fasilitas kesehatan. Butuh penanganan medis dan pemberian Pemberian Makanan Tambahan (PMT) atau makanan terapi sesuai arahan petugas gizi. Pemantauan intensif diperlukan.",
+    ("Normal",           "Overweight"):       "Anak mengalami kelebihan berat badan. Kurangi konsumsi makanan tinggi gula, garam, dan lemak. Berikan buah dan sayuran lebih sering. Dorong aktivitas fisik (main aktif, jalan, lari-larian), dan pantau asupan susu dan camilan.",
+    ("Stunted",          "Normal"):           "Anak mengalami pertumbuhan tinggi yang lebih rendah dari usianya. Tingkatkan kualitas dan kuantitas makanan (terutama protein hewani seperti ayam, ikan, telur), tambahkan MPASI bergizi jika >6 bulan, dan pastikan imunisasi lengkap. Konsultasikan dengan petugas kesehatan.",
+    ("Stunted",          "Wasted"):           "Anak mengalami dua masalah gizi: berat badan dan tinggi badan tidak sesuai. Perlu perhatian ekstra. Tingkatkan frekuensi makan, berikan makanan tinggi kalori dan protein, dan periksa ke puskesmas untuk pemantauan dan intervensi gizi.",
+    ("Stunted",          "Severely Wasted"):  "Kondisi gizi anak sangat mengkhawatirkan. Butuh penanganan medis segera. Bawa anak ke puskesmas/RS untuk intervensi gizi terapeutik dan evaluasi klinis. Pemberian makanan tinggi energi dan pemantauan harian sangat diperlukan.",
+    ("Stunted",          "Overweight"):       "Anak pendek untuk usianya dan memiliki kelebihan berat badan. Evaluasi pola makan (hindari makanan olahan, manis, tinggi lemak), perbaiki aktivitas fisik harian, dan konsultasi ke ahli gizi anak untuk intervensi gizi yang seimbang.",
+    ("Severely Stunted", "Normal"):           "Anak mengalami kekurangan tinggi badan yang parah. Butuh pemantauan intensif tumbuh kembang. Berikan makanan tinggi protein dan zat besi. Perlu tambahan intervensi gizi dari posyandu dan kemungkinan rujukan ke tenaga medis.",
+    ("Severely Stunted", "Wasted"):           "Anak sangat pendek dan memiliki berat badan kurang. Intervensi gizi harus dilakukan sesegera mungkin. Perlu kunjungan ke fasilitas kesehatan untuk evaluasi menyeluruh, termasuk pemberian makanan terapeutik dan pemantauan ketat.",
+    ("Severely Stunted", "Severely Wasted"):  "Kondisi gizi sangat berat. Risiko kematian meningkat. Harus segera dirujuk ke fasilitas kesehatan (RS/puskesmas). Dibutuhkan terapi gizi medis intensif, pemantauan klinis harian, dan kemungkinan rawat inap.",
+    ("Severely Stunted", "Overweight"):       "Anak sangat pendek namun kelebihan berat badan. Pola makan kemungkinan tidak seimbang (berlebihan kalori, kurang mikronutrien). Evaluasi menyeluruh oleh ahli gizi diperlukan. Kurangi makanan manis dan olahan, tingkatkan makanan alami dan seimbang.",
+    ("Tall",             "Normal"):           "Anak memiliki pertumbuhan tinggi baik. Terus pantau pertumbuhan secara berkala dan pertahankan asupan makanan bergizi seimbang serta aktivitas fisik yang rutin.",
+    ("Tall",             "Wasted"):           "Anak tinggi tetapi memiliki berat badan kurang. Perlu ditingkatkan kualitas makanan, terutama dari sisi kalori dan protein. Konsultasi ke tenaga kesehatan untuk menentukan penyebab dan tindak lanjut.",
+    ("Tall",             "Severely Wasted"):  "Anak tinggi dengan berat badan sangat kurang. Perlu intervensi segera untuk menghindari komplikasi gizi. Bawa anak ke puskesmas atau rumah sakit untuk penanganan gizi intensif.",
+    ("Tall",             "Overweight"):       "Anak memiliki tinggi dan berat badan melebihi standar. Risiko obesitas. Perhatikan pola makan (hindari gula, lemak, makanan cepat saji) dan dorong aktivitas fisik harian. Jika perlu, konsultasi dengan petugas gizi."
+}
+
 # Konfigurasi halaman
 st.set_page_config(
     page_title="GrowUp+",
@@ -258,26 +278,26 @@ if st.session_state.get('analyzed'):
                 st.warning(f"⚠️ Anak memiliki kelebihan berat {kelebihan} kg dari ideal ({berat_ideal} kg).")
         
             st.plotly_chart(fig2, use_container_width=True)
-    # Rekomendasi
+    # setelah Anda menghitung pred_s dan pred_w serta memiliki:
+    stunting_label = results['stunting']['labels'][pred_s]
+    wasting_label  = results['wasting']['labels'][pred_w]
+    #Rekomendasi
     st.markdown("---")
     with st.expander("📌 Rekomendasi Medis", expanded=True):
-        if pred_s >= 1 or pred_w >= 1:
-            st.error("""
-            ⚠️ **Perhatian!**  
-            Hasil analisis menunjukkan adanya potensi masalah pertumbuhan. 
-            Segera konsultasikan dengan tenaga medis untuk:
-            - Pemeriksaan lebih lanjut
-            - Rencana intervensi gizi
-            - Pemantauan berkala
-            """)
+        # cari teks rekomendasi
+        rekom_text = rekom_map.get(
+            (stunting_label, wasting_label),
+            "Data rekomendasi tidak tersedia."
+        )
+        # tampilkan kategori dan rekomendasi
+        st.markdown(f"**Stunting:** {stunting_label}  \n"
+                    f"**Wasting :** {wasting_label}")
+        # gunakan styling sesuai level
+        if "berat" in rekom_text.lower() or "segera" in rekom_text.lower():
+            st.error(rekom_text)
         else:
-            st.success("""
-            ✅ **Hasil Normal**  
-            Pertumbuhan anak dalam kisaran normal. Tetap lakukan:
-            - Pemantauan rutin tiap bulan
-            - Pemberian gizi seimbang
-            - Stimulasi fisik sesuai usia
-            """)
+            st.info(rekom_text)
+
 else:
     # Tampilan awal
     st.markdown("""
