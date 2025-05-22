@@ -89,13 +89,36 @@ st.markdown(f"""
 with st.sidebar:
     st.header("📋 Masukkan Data Anak")
     st.markdown("---")
-    umur = st.slider("Umur (bulan)", 1, 60, 12,
-                    help="Usia anak dalam bulan")
+    umur = st.number_input(
+        "Umur (bulan)", 
+        min_value=1, 
+        max_value=60, 
+        value=12,      # nilai default
+        step=1, 
+        format="%d",
+        help="Masukkan usia anak dalam bulan"
+    )
+    
     gender = st.selectbox("Jenis Kelamin", ["Laki-laki", "Perempuan"])
-    tinggi = st.number_input("Tinggi Badan (cm)", 40.0, 150.0, 75.0, step=0.1,
-                           format="%.1f")
-    berat = st.number_input("Berat Badan (kg)", 3.0, 50.0, 10.0, step=0.1,
-                          format="%.1f")
+    
+    tinggi = st.number_input(
+        "Tinggi Badan (cm)", 
+        min_value=40.0, 
+        max_value=150.0, 
+        value=75.0, 
+        step=0.1,
+        format="%.1f"
+    )
+    
+    berat = st.number_input(
+        "Berat Badan (kg)", 
+        min_value=3.0, 
+        max_value=50.0, 
+        value=10.0, 
+        step=0.1,
+        format="%.1f"
+    )
+    
     st.markdown("---")
     
     if st.button("🚀 Mulai Analisis", use_container_width=True):
