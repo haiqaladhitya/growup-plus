@@ -308,7 +308,7 @@ st.markdown(f"""
         /* Disclaimer */
         .disclaimer {{
             font-size: 1rem;
-            color: #f39c12;
+            color: #E74C3C;
             font-style: italic;
             text-align: center;
         }}
