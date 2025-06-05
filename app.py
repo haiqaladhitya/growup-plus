@@ -289,25 +289,25 @@ st.markdown(f"""
             margin-bottom: 2rem;
         }}
         
-        .stProgress {
+        .stProgress {{
             background-color: #AED6F1; /* Warna latar belakang untuk progress bar */
             border-radius: 20px;
             height: 30px;
-        }
+        }}
         
-        .stProgress>div {
+        .stProgress>div {{
             color: #2E86C1; /* Warna teks untuk progres */
             font-weight: bold; /* Membuat teks lebih tebal */
             text-align: center; /* Menyusun teks di tengah */
             font-size: 1rem; /* Ukuran font yang nyaman dibaca */
             line-height: 30px; /* Menyesuaikan tinggi bar dengan teks */
-        }
+        }}
         
-        .stProgress p {
+        .stProgress p {{
             color: #2E86C1;
             font-size: 1.2rem; /* Ukuran font untuk teks status */
             font-weight: bold;
-        }
+        }}
         
         .stPlotlyChart {{
             border: 1px solid {theme['secondary']};
