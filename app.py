@@ -361,7 +361,7 @@ st.markdown(f"""
             margin : auto
         }}
         div.st-emotion-cache-r421ms {{ /* Class untuk container border di st.container(border=True) */
-             width: 40%;  /* Menyesuaikan lebar container menjadi 50% dari lebar induk */
+             width: 50%;  /* Menyesuaikan lebar container menjadi 50% dari lebar induk */
              margin: auto;
              border-radius: 10px;
              padding: 1em; /* Padding dalam container */
