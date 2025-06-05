@@ -190,47 +190,51 @@ if st.session_state.get('analyzed', False):
         }
     }
 
-    # Tampilkan hasil prediksi dengan styling
-    col1, col2 = st.columns(2)
-    tinggi_aktual = tinggi
-    tinggi_ideal  = compute_ideal_height(umur, gender)
-    with col1:
-        st.markdown("### 📏 Hasil Prediksi Stunting")
-        st.markdown(f"**Kategori:** {results['stunting']['labels'][pred_s]}")
-        # Hitung progres dan persentase untuk stunting
-        stunting_progress_value = (pred_s + 1) / len(results['stunting']['labels'])
-        stunting_percentage = stunting_progress_value * 100
-            
-        # Menyesuaikan teks jika kategori adalah "Tall"
-        risk_text_stunting = f"Tingkat Status: {stunting_percentage:.0f}%"
-        if stunting_category == "Tall":
-            risk_text_stunting = f"Kategori Pertumbuhan: {stunting_category} (Tidak menunjukkan risiko)"
-            # Untuk "Tall", progress bar mungkin tidak relevan sebagai "risiko"
-            # Anda bisa memilih untuk tidak menampilkan progress bar atau menampilkannya secara berbeda
-            st.markdown(risk_text_stunting) # Menampilkan teks saja
-        else:
-            st.progress(stunting_progress_value, text=f"Tingkat Risiko: {stunting_percentage:.0f}%")
+   # Tampilkan hasil prediksi dengan styling
+col1, col2 = st.columns(2)
+tinggi_aktual = tinggi
+tinggi_ideal  = compute_ideal_height(umur, gender)
 
-        plot_progress(tinggi_aktual, tinggi_ideal, "Tinggi", "cm")
+with col1:
+    st.markdown("### 📏 Hasil Prediksi Stunting")
+    stunting_category = results['stunting']['labels'][pred_s]  # Definisikan stunting_category
+    st.markdown(f"**Kategori:** {stunting_category}")
+    
+    # Hitung progres dan persentase untuk stunting
+    stunting_progress_value = (pred_s + 1) / len(results['stunting']['labels'])
+    stunting_percentage = stunting_progress_value * 100
+    
+    # Menyesuaikan teks jika kategori adalah "Tall"
+    risk_text_stunting = f"Tingkat Status: {stunting_percentage:.0f}%"
+    if stunting_category == "Tall":
+        risk_text_stunting = f"Kategori Pertumbuhan: {stunting_category} (Tidak menunjukkan risiko)"
+        # Untuk "Tall", progress bar mungkin tidak relevan sebagai "risiko"
+        # Anda bisa memilih untuk tidak menampilkan progress bar atau menampilkannya secara berbeda
+        st.markdown(risk_text_stunting)  # Menampilkan teks saja
+    else:
+        st.progress(stunting_progress_value, text=f"Tingkat Risiko: {stunting_percentage:.0f}%")
 
-    with col2:
-        st.markdown("### ⚖️ Hasil Prediksi Wasting")
-        st.markdown(f"**Kategori:** {results['wasting']['labels'][pred_w]}")
-        # Hitung progres dan persentase untuk wasting
-        # Pastikan len(results['wasting']['labels']) > 0
-        if len(results['wasting']['labels']) > 0:
-            wasting_progress_value = (pred_w + 1) / len(results['wasting']['labels'])
-            wasting_percentage = wasting_progress_value * 100
-                
-            risk_text_wasting = f"Tingkat Risiko: {wasting_percentage:.0f}%"
-            if wasting_category == "Overweight" and "Tall" not in wasting_category : # Overweight juga bukan 'risiko' dalam konteks kekurangan gizi
-                risk_text_wasting = f"Kategori Status Gizi: {wasting_category} ({wasting_percentage:.0f}%)"
-            st.progress(wasting_progress_value, text=risk_text_wasting)
-        else:
-            st.markdown("Label untuk wasting tidak terkonfigurasi dengan benar.")
+    plot_progress(tinggi_aktual, tinggi_ideal, "Tinggi", "cm")
 
-        plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
+with col2:
+    st.markdown("### ⚖️ Hasil Prediksi Wasting")
+    wasting_category = results['wasting']['labels'][pred_w]  # Definisikan wasting_category
+    st.markdown(f"**Kategori:** {wasting_category}")
+    
+    # Hitung progres dan persentase untuk wasting
+    if len(results['wasting']['labels']) > 0:
+        wasting_progress_value = (pred_w + 1) / len(results['wasting']['labels'])
+        wasting_percentage = wasting_progress_value * 100
+        
+        risk_text_wasting = f"Tingkat Risiko: {wasting_percentage:.0f}%"
+        if wasting_category == "Overweight" and "Tall" not in wasting_category:  # Overweight juga bukan 'risiko' dalam konteks kekurangan gizi
+            risk_text_wasting = f"Kategori Status Gizi: {wasting_category} ({wasting_percentage:.0f}%)"
+        st.progress(wasting_progress_value, text=risk_text_wasting)
+    else:
+        st.markdown("Label untuk wasting tidak terkonfigurasi dengan benar.")
 
+    plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
+    
     # Rekomendasi Medis
     st.markdown("---")
     with st.expander("📌 Rekomendasi Medis", expanded=True):
