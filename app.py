@@ -71,7 +71,7 @@ def plot_progress(actual, ideal, label, unit):
         margin=dict(t=20, b=20, l=20, r=20)  # Memberikan margin untuk memperkecil chart
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=False)
 
 
 # mapping rekomendasi berdasarkan (Stunting, Wasting)
