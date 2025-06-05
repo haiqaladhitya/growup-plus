@@ -73,13 +73,13 @@ def plot_progress(actual, ideal, label, unit):
     
     # Menyusun ukuran pie chart
     fig.update_layout(
-        height=200,  # Ukuran tinggi pie chart yang lebih besar
-        width=200,   # Ukuran lebar pie chart yang lebih besar
+        height=400,  # Ukuran tinggi pie chart yang lebih besar
+        width=400,   # Ukuran lebar pie chart yang lebih besar
         margin=dict(t=20, b=20, l=10, r=10),
         plot_bgcolor=theme['secondary'],  # Background chart yang lebih lembut
     )
     
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=False)
 
 
 # mapping rekomendasi berdasarkan (Stunting, Wasting)
