@@ -79,7 +79,7 @@ def plot_progress(actual, ideal, label, unit):
         plot_bgcolor=theme['secondary'],  # Background chart yang lebih lembut
     )
     
-    st.plotly_chart(fig, use_container_width=False)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 # mapping rekomendasi berdasarkan (Stunting, Wasting)
