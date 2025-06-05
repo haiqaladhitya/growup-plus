@@ -356,6 +356,7 @@ st.markdown(f"""
         }}
         /* Styling untuk container hasil prediksi */
         div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"] div[data-testid="stExpander"] {{
+            width: 50%;
             border-radius: 10px;
             margin: auto;
         }}
