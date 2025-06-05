@@ -75,7 +75,7 @@ def plot_progress(actual, ideal, label, unit):
     fig.update_layout(
         height=400,  # Ukuran tinggi pie chart yang lebih besar
         width=400,   # Ukuran lebar pie chart yang lebih besar
-        margin=dict(t=20, b=20, l=10, r=10),
+        margin=dict(t=20, b=20, l=5, r=5),
         plot_bgcolor=theme['secondary'],  # Background chart yang lebih lembut
     )
     
