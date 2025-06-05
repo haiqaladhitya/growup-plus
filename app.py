@@ -71,7 +71,7 @@ def plot_progress(actual, ideal, label, unit):
         margin=dict(t=20, b=20, l=20, r=20)  # Memberikan margin untuk memperkecil chart
     )
     
-    st.plotly_chart(fig, use_container_width=False)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 # mapping rekomendasi berdasarkan (Stunting, Wasting)
@@ -356,7 +356,9 @@ st.markdown(f"""
         }}
         /* Styling untuk container hasil prediksi */
         div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"] div[data-testid="stExpander"] {{
+            width: 50%;
             border-radius: 10px;
+            margin : auto
         }}
         div.st-emotion-cache-r421ms {{ /* Class untuk container border di st.container(border=True) */
              width: 50%;  /* Menyesuaikan lebar container menjadi 50% dari lebar induk */
