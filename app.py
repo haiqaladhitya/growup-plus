@@ -356,11 +356,11 @@ st.markdown(f"""
         }}
         /* Styling untuk container hasil prediksi */
         div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"] div[data-testid="stExpander"] {{
-            width: 50%;
             border-radius: 10px;
-            margin: auto;
         }}
         div.st-emotion-cache-r421ms {{ /* Class untuk container border di st.container(border=True) */
+             width: 50%;  /* Menyesuaikan lebar container menjadi 50% dari lebar induk */
+             margin: auto;
              border-radius: 10px;
              padding: 1em; /* Padding dalam container */
         }}
