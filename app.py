@@ -59,16 +59,24 @@ def plot_progress(actual, ideal, label, unit):
         msg = f"⚠️ Perlu {verb} {abs(diff)} {unit} untuk capai ideal ({ideal} {unit})."
 
     box(msg)
+    
+    # Membuat chart pie lebih interaktif
     fig = px.pie(
         df, names=label, values="Nilai",
-        color_discrete_sequence=color
+        color_discrete_sequence=color,
+        hole=0.3,  # Membuatnya seperti donut chart untuk efek visual
+        title=f"{label} - {unit}"
     )
     
-    # Mengatur ukuran pie chart
+    # Menambahkan tooltip untuk informasi lebih lanjut saat hover
+    fig.update_traces(textinfo='percent+label', pull=[0.05, 0.05], hoverinfo='label+percent+value')
+    
+    # Menyusun ukuran pie chart
     fig.update_layout(
-        height=300,  # Tinggi pie chart
-        width=300,   # Lebar pie chart
-        margin=dict(t=20, b=20, l=10, r=10)  # Memberikan margin untuk memperkecil chart
+        height=350,  # Ukuran pie chart yang lebih besar
+        width=350,   # Lebar pie chart
+        margin=dict(t=20, b=20, l=10, r=10),
+        plot_bgcolor=theme['secondary'],  # Background chart yang lebih lembut
     )
     
     st.plotly_chart(fig, use_container_width=False)
@@ -260,33 +268,72 @@ st.markdown(f"""
             color: {theme['primary']};
             text-align: center;
             padding: 1rem;
-            font-size: 3rem;  /* Ukuran font yang lebih besar */
+            font-size: 3.5rem;
+            font-weight: bold;
         }}
         
         .sidebar .sidebar-content {{
             background-color: {theme['secondary']};
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 2rem;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
         }}
         
         .stButton>button {{
             background-color: {theme['primary']};
             color: white;
-            border-radius: 5px;
-            padding: 0.7rem 1.5rem;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.3s;
+            border-radius: 10px;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
         }}
-        
+
         .stButton>button:hover {{
             background-color: {theme['success']};
             opacity: 0.8;
-            transform: scale(1.05);
+            transform: scale(1.1);
         }}
+
         
         .stExpander {{
-            margin-bottom: 2rem;
+            margin-bottom: 2rem;  /* Memberikan ruang bawah yang lebih besar */
+            padding: 1rem;        /* Menambahkan padding untuk memberikan ruang di dalam expander */
+            border-radius: 10px;  /* Membuat sudut lebih lembut */
+            background-color: {theme['secondary']};  /* Warna latar belakang yang lembut */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);  /* Memberikan efek bayangan ringan untuk menonjolkan expander */
+            transition: all 0.3s ease;  /* Transisi halus saat membuka atau menutup expander */
+        }}
+        
+        .stExpanderHeader {{
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: {theme['primary']};
+            display: flex;
+            align-items: center;
+            justify-content: space-between;  /* Agar header dan ikon berada di sisi yang berbeda */
+            cursor: pointer;
+            transition: color 0.3s ease;  /* Memberikan transisi warna yang halus saat hover */
+        }}
+        
+        .stExpanderHeader:hover {{
+            color: {theme['success']};  /* Mengubah warna header ketika hover */
+        }}
+        
+        .stExpanderIcon {{
+            font-size: 1.5rem;  /* Membuat ikon lebih besar */
+            transition: transform 0.3s ease;  /* Transisi yang halus saat ikon berubah */
+        }}
+        
+        .stExpanderIcon.expanded {{
+            transform: rotate(180deg);  /* Ikon berubah arah saat expander terbuka */
+        }}
+        
+        /* Teks di dalam expander */
+        .stExpanderContent {{
+            font-size: 1rem;
+            color: #333;
+            padding: 1rem 0;
         }}
         
         .stProgress {{
@@ -296,7 +343,7 @@ st.markdown(f"""
         }}
         
         .stProgress>div {{
-            color: #2E86C1; /* Warna teks untuk progres */
+            color: #FFFFFF; /* Warna teks untuk progres */
             font-weight: bold; /* Membuat teks lebih tebal */
             text-align: center; /* Menyusun teks di tengah */
             font-size: 1rem; /* Ukuran font yang nyaman dibaca */
@@ -311,24 +358,32 @@ st.markdown(f"""
         
         .stPlotlyChart {{
             border: 1px solid {theme['secondary']};
-            border-radius: 15px;
+            border-radius: 20px;
             padding: 1rem;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
         }}
 
          .footer {{
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.2rem;
             color: #666;
             padding: 1rem;
             background-color: {theme['primary']};
-            border-radius: 10px;
+            border-radius: 20px;
         }}
         
         .disclaimer {{
             font-size: 1rem;
-            color: #E74C3C;
+            color: #FFFFFF;
             font-style: italic;
             text-align: center;
         }}
+
+         /* Animation */
+        @keyframes fadeIn {{
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }}
+        
     </style>
 """, unsafe_allow_html=True)
