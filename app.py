@@ -61,11 +61,16 @@ def plot_progress(actual, ideal, label, unit):
     box(msg)
     fig = px.pie(
         df, names=label, values="Nilai",
-        color_discrete_sequence=color,
-        height=300,
-        width=300,
-        margin=dict(t=20, b=20, l=20, r=20)
+        color_discrete_sequence=color
     )
+    
+    # Mengatur ukuran pie chart
+    fig.update_layout(
+        height=300,  # Tinggi pie chart
+        width=300,   # Lebar pie chart
+        margin=dict(t=20, b=20, l=20, r=20)  # Memberikan margin untuk memperkecil chart
+    )
+    
     st.plotly_chart(fig, use_container_width=False)
 
 
