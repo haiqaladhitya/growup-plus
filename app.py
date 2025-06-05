@@ -299,6 +299,15 @@ st.markdown(f"""
             border-radius: 15px;
             padding: 1rem;
         }}
+
+         .footer {{
+            text-align: center;
+            font-size: 1rem;
+            color: #666;
+            padding: 1rem;
+            background-color: {theme['secondary']};
+            border-radius: 10px;
+        }}
         
         .disclaimer {{
             font-size: 1rem;
