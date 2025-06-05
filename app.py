@@ -226,10 +226,10 @@ if st.session_state.get('analyzed', False):
             if wasting_category == "Overweight" and "Tall" not in wasting_category : # Overweight juga bukan 'risiko' dalam konteks kekurangan gizi
                 risk_text_wasting = f"Kategori Status Gizi: {wasting_category} ({wasting_percentage:.0f}%)"
             st.progress(wasting_progress_value, text=risk_text_wasting)
-            else:
-                st.markdown("Label untuk wasting tidak terkonfigurasi dengan benar.")
+        else:
+            st.markdown("Label untuk wasting tidak terkonfigurasi dengan benar.")
 
-            plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
+        plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
 
     # Rekomendasi Medis
     st.markdown("---")
