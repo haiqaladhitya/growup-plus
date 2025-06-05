@@ -331,42 +331,84 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# CSS tambahan
+# CSS tambahan untuk desain yang lebih menarik
 st.markdown(f"""
     <style>
-        .st-emotion-cache-1v0mbdj img {{ /* Target spesifik untuk gambar di card jika perlu */
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }}
-        .stPlotlyChart {{
-            border: 1px solid {theme['secondary']};
-            border-radius: 10px;
+        /* Styling untuk header dengan animasi */
+        .title {{
+            animation: fadeIn 2s;
+            color: {theme['primary']};
+            text-align: center;
             padding: 1rem;
+            font-size: 3rem;  /* Ukuran font yang lebih besar */
         }}
+        
+        /* Sidebar styling */
+        .sidebar .sidebar-content {{
+            background-color: {theme['secondary']};
+            border-radius: 15px;
+            padding: 2rem;
+        }}
+        
         .stButton>button {{
             background-color: {theme['primary']};
             color: white;
+            border-radius: 5px;
+            padding: 0.7rem 1.5rem;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: all 0.3s;
-            border-radius: 5px; /* Tambahan untuk estetika tombol */
-            border: none;
         }}
+        
         .stButton>button:hover {{
+            background-color: {theme['success']};
             opacity: 0.8;
-            transform: scale(1.02); /* Sedikit penyesuaian pada hover */
+            transform: scale(1.05);
         }}
+        
         /* Styling untuk container hasil prediksi */
-        div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"] div[data-testid="stExpander"] {{
-            width: 50%;
-            border-radius: 10px;
-            margin : auto
+        .stExpander {{
+            margin-bottom: 2rem;
         }}
-        div.st-emotion-cache-r421ms {{ /* Class untuk container border di st.container(border=True) */
-             width: 50%;  /* Menyesuaikan lebar container menjadi 50% dari lebar induk */
-             margin: auto;
-             border-radius: 10px;
-             padding: 1em; /* Padding dalam container */
+        
+        .stProgress {{
+            background-color: {theme['secondary']};
+            border-radius: 20px;
         }}
 
+        /* Styling untuk Pie chart */
+        .stPlotlyChart {{
+            border: 1px solid {theme['secondary']};
+            border-radius: 15px;
+            padding: 1rem;
+        }}
+        
+        /* Styling untuk rekomendasi */
+        .recommendation {{
+            font-size: 1.2rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }}
+        
+        /* Footer */
+        .footer {{
+            text-align: center;
+            font-size: 1rem;
+            color: #666;
+            padding: 1rem;
+            background-color: {theme['secondary']};
+            border-radius: 10px;
+        }}
+        
+        /* Disclaimer */
+        .disclaimer {{
+            font-size: 1rem;
+            color: #f39c12;
+            font-style: italic;
+            text-align: center;
+        }}
     </style>
 """, unsafe_allow_html=True)
 
