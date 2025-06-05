@@ -198,62 +198,29 @@ if st.session_state.get('analyzed', False):
     
     with col1:
         st.markdown("### 📏 Hasil Prediksi Stunting")
-        with st.container(border=True):
-            stunting_category = results['stunting']['labels'][pred_s]
-            st.markdown(f"**Kategori:** {stunting_category}")
-            
-            # Hitung progres dan persentase untuk stunting
-            stunting_progress_value = (pred_s + 1) / len(results['stunting']['labels'])
-            stunting_percentage = stunting_progress_value * 100
-            
-            # Menyesuaikan teks jika kategori adalah "Tall"
-            risk_text_stunting = f"Tingkat Status: {stunting_percentage:.0f}%"
-            if stunting_category == "Tall":
-                risk_text_stunting = f"Kategori Pertumbuhan: {stunting_category} (Tidak menunjukkan risiko)"
-                # Untuk "Tall", progress bar mungkin tidak relevan sebagai "risiko"
-                # Anda bisa memilih untuk tidak menampilkan progress bar atau menampilkannya secara berbeda
-                st.markdown(risk_text_stunting) # Menampilkan teks saja
-            else:
-                st.progress(stunting_progress_value, text=f"Tingkat Risiko: {stunting_percentage:.0f}%")
-
-            plot_progress(tinggi_aktual, tinggi_ideal, "Tinggi", "cm")
-
+        stunting_category = results['stunting']['labels'][pred_s]
+        st.markdown(f"**Kategori:** {stunting_category}")
+        
+        # Hitung progres dan persentase untuk stunting
+        stunting_progress_value = (pred_s + 1) / len(results['stunting']['labels'])
+        stunting_percentage = stunting_progress_value * 100
+        
+        # Menampilkan progres bar dan persentase
+        st.progress(stunting_progress_value, text=f"Tingkat Risiko: {stunting_percentage:.0f}%")
+        plot_progress(tinggi_aktual, tinggi_ideal, "Tinggi", "cm")
 
     with col2:
         st.markdown("### ⚖️ Hasil Prediksi Wasting")
-        with st.container(border=True):
-            # Pastikan label wasting konsisten atau sesuaikan
-            # Jika model `wasting` menghasilkan 4 output (0,1,2,3) dan labels di `results` memiliki 4 entri
-            if pred_w < len(results['wasting']['labels']):
-                wasting_category = results['wasting']['labels'][pred_w]
-            else:
-                wasting_category = "Tidak Terdefinisi" # Fallback jika pred_w di luar jangkauan
-
-            st.markdown(f"**Kategori:** {wasting_category}")
-            
-            # Hitung progres dan persentase untuk wasting
-            # Pastikan len(results['wasting']['labels']) > 0
-            if len(results['wasting']['labels']) > 0:
-                wasting_progress_value = (pred_w + 1) / len(results['wasting']['labels'])
-                wasting_percentage = wasting_progress_value * 100
-                
-                risk_text_wasting = f"Tingkat Risiko: {wasting_percentage:.0f}%"
-                if wasting_category == "Overweight" and "Tall" not in wasting_category : # Overweight juga bukan 'risiko' dalam konteks kekurangan gizi
-                     risk_text_wasting = f"Kategori Status Gizi: {wasting_category} ({wasting_percentage:.0f}%)"
-                st.progress(wasting_progress_value, text=risk_text_wasting)
-            else:
-                st.markdown("Label untuk wasting tidak terkonfigurasi dengan benar.")
-
-            plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
-
-    # setelah Anda menghitung pred_s dan pred_w serta memiliki:
-    stunting_label = results['stunting']['labels'][pred_s]
-    
-    # Pastikan konsistensi label wasting di sini juga
-    if pred_w < len(results['wasting']['labels']):
-        wasting_label  = results['wasting']['labels'][pred_w]
-    else:
-        wasting_label = "Tidak Terdefinisi" # Fallback
+        wasting_category = results['wasting']['labels'][pred_w]
+        st.markdown(f"**Kategori:** {wasting_category}")
+        
+        # Hitung progres dan persentase untuk wasting
+        wasting_progress_value = (pred_w + 1) / len(results['wasting']['labels'])
+        wasting_percentage = wasting_progress_value * 100
+        
+        # Menampilkan progres bar dan persentase
+        st.progress(wasting_progress_value, text=f"Tingkat Risiko: {wasting_percentage:.0f}%")
+        plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
 
     # Rekomendasi Medis
     st.markdown("---")
@@ -288,7 +255,6 @@ st.markdown("<div class='footer'>© 2025 GrowUp+ - Sistem Pemantauan Tumbuh Kemb
 # CSS tambahan untuk desain yang lebih menarik
 st.markdown(f"""
     <style>
-        /* Styling untuk header dengan animasi */
         .title {{
             animation: fadeIn 2s;
             color: {theme['primary']};
@@ -297,7 +263,6 @@ st.markdown(f"""
             font-size: 3rem;  /* Ukuran font yang lebih besar */
         }}
         
-        /* Sidebar styling */
         .sidebar .sidebar-content {{
             background-color: {theme['secondary']};
             border-radius: 15px;
@@ -320,7 +285,6 @@ st.markdown(f"""
             transform: scale(1.05);
         }}
         
-        /* Styling untuk container hasil prediksi */
         .stExpander {{
             margin-bottom: 2rem;
         }}
@@ -330,33 +294,12 @@ st.markdown(f"""
             border-radius: 20px;
         }}
 
-        /* Styling untuk Pie chart */
         .stPlotlyChart {{
             border: 1px solid {theme['secondary']};
             border-radius: 15px;
             padding: 1rem;
         }}
         
-        /* Styling untuk rekomendasi */
-        .recommendation {{
-            font-size: 1.2rem;
-            padding: 1rem;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }}
-        
-        /* Footer */
-        .footer {{
-            text-align: center;
-            font-size: 1rem;
-            color: #666;
-            padding: 1rem;
-            background-color: {theme['secondary']};
-            border-radius: 10px;
-        }}
-        
-        /* Disclaimer */
         .disclaimer {{
             font-size: 1rem;
             color: #E74C3C;
@@ -365,6 +308,3 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
-
-# Panggil style_metric_cards di akhir jika masih digunakan untuk widget lain
-# style_metric_cards() # Jika Anda memiliki metric cards yang ingin di-style
