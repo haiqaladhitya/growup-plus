@@ -123,33 +123,22 @@ theme = {
 
 # Header dengan animasi
 st.markdown(f"""
-    <style>
-        @keyframes fadeIn {{
-            0% {{ opacity: 0; }}
-            100% {{ opacity: 1; }}
-        }}
-        .title {{
-            animation: fadeIn 2s;
-            color: {theme['primary']};
-            text-align: center;
-            padding: 1rem;
-        }}
-    </style>
     <h1 class="title">👶 GrowUp+</h1>
 """, unsafe_allow_html=True)
 
 # Sidebar untuk input data
 with st.sidebar:
-    st.header("📋 Silahkan masukkan data anak")
+    st.header("📋 Silakan Masukkan Data Anak")
     st.markdown("---")
+    
     umur = st.number_input(
         "Umur (bulan)", 
         min_value=1, 
         max_value=60, 
-        value=12,     # nilai default
+        value=12,     
         step=1, 
         format="%d",
-        help="Masukkan usia anak dalam bulan"
+        help="Masukkan usia anak dalam bulan. (Batas: 1-60 bulan)"
     )
     
     gender = st.selectbox("Jenis Kelamin", ["Laki-laki", "Perempuan"])
@@ -160,7 +149,8 @@ with st.sidebar:
         max_value=150.0, 
         value=75.0, 
         step=0.1,
-        format="%.1f"
+        format="%.1f",
+        help="Masukkan tinggi badan anak dalam cm. (Batas: 40-150 cm)"
     )
     
     berat = st.number_input(
@@ -169,22 +159,21 @@ with st.sidebar:
         max_value=50.0, 
         value=10.0, 
         step=0.1,
-        format="%.1f"
+        format="%.1f",
+        help="Masukkan berat badan anak dalam kg. (Batas: 3-50 kg)"
     )
     
     st.markdown("---")
     
     if st.button("🚀 Mulai Analisis", use_container_width=True):
         st.session_state.analyzed = True
-    # else: # Menghapus else ini agar status analyzed tetap True setelah ditekan
-    #     st.session_state.analyzed = False
 
 # Konten utama
-if st.session_state.get('analyzed', False): # Menambahkan default False
+if st.session_state.get('analyzed', False):
     # Preprocessing
     gender_enc = 0 if gender.startswith("L") else 1
     X = np.array([[umur, gender_enc, tinggi, berat]])
-    
+
     # Prediksi
     pred_s = models['stunting'].predict(X)[0]
     pred_w = models['wasting'].predict(X)[0]
@@ -196,125 +185,45 @@ if st.session_state.get('analyzed', False): # Menambahkan default False
             'color': [theme['success'], theme['warning'], theme['danger'], theme['primary']]
         },
         'wasting': {
-            'labels': ["Normal", "Wasting", "Severe Wasting", "Overweight"], # Sesuaikan label jika berbeda dengan rekom_map
-            # Perhatikan: Label wasting di results berbeda dengan yang di rekom_map. 
-            # Saya akan menggunakan label dari results untuk konsistensi tampilan, 
-            # tapi pastikan ini sesuai dengan model Anda.
-            # Original Wasting Labels di results: ["Normal", "Mild Wasting", "Moderate Wasting", "Severe Wasting"]
-            # Untuk konsistensi dengan rekom_map, mari kita asumsikan mappingnya begini:
-            # 0: Normal, 1: Wasting (mencakup Mild/Moderate), 2: Severe Wasting, 3: Overweight (jika model mendukung)
-            # Atau jika model Anda menghasilkan index yang berbeda, sesuaikan 'labels' di sini.
-            # Untuk sementara, saya akan gunakan label yang lebih umum atau Anda bisa sesuaikan:
-            'labels': ["Normal", "Wasting", "Severe Wasting", "Overweight"], # Contoh, sesuaikan ini
+            'labels': ["Normal", "Wasting", "Severe Wasting", "Overweight"],
             'color': [theme['success'], theme['warning'], theme['danger'], theme['primary']]
         }
     }
-    
-    # Tampilkan hasil dalam kolom
+
+    # Tampilkan hasil prediksi dengan styling
     col1, col2 = st.columns(2)
-    tinggi_aktual = tinggi
-    tinggi_ideal  = compute_ideal_height(umur, gender)
-    # selisih_tg    = round(tinggi_ideal - tinggi_aktual, 1) # Tidak digunakan secara langsung di sini
-    
     with col1:
         st.markdown("### 📏 Hasil Prediksi Stunting")
-        with st.container(border=True):
-            stunting_category = results['stunting']['labels'][pred_s]
-            st.markdown(f"**Kategori:** {stunting_category}")
-            
-            # Hitung progres dan persentase untuk stunting
-            stunting_progress_value = (pred_s + 1) / len(results['stunting']['labels'])
-            stunting_percentage = stunting_progress_value * 100
-            
-            # Menyesuaikan teks jika kategori adalah "Tall"
-            risk_text_stunting = f"Tingkat Status: {stunting_percentage:.0f}%"
-            if stunting_category == "Tall":
-                risk_text_stunting = f"Kategori Pertumbuhan: {stunting_category} (Tidak menunjukkan risiko)"
-                # Untuk "Tall", progress bar mungkin tidak relevan sebagai "risiko"
-                # Anda bisa memilih untuk tidak menampilkan progress bar atau menampilkannya secara berbeda
-                st.markdown(risk_text_stunting) # Menampilkan teks saja
-            else:
-                st.progress(stunting_progress_value, text=f"Tingkat Risiko: {stunting_percentage:.0f}%")
-
-            plot_progress(tinggi_aktual, tinggi_ideal, "Tinggi", "cm")
-
+        st.markdown(f"**Kategori:** {results['stunting']['labels'][pred_s]}")
+        st.progress(pred_s / len(results['stunting']['labels']), text=f"Tingkat Risiko: {pred_s * 25}%")
+        plot_progress(tinggi, compute_ideal_height(umur, gender), "Tinggi", "cm")
 
     with col2:
         st.markdown("### ⚖️ Hasil Prediksi Wasting")
-        with st.container(border=True):
-            # Pastikan label wasting konsisten atau sesuaikan
-            # Jika model `wasting` menghasilkan 4 output (0,1,2,3) dan labels di `results` memiliki 4 entri
-            if pred_w < len(results['wasting']['labels']):
-                wasting_category = results['wasting']['labels'][pred_w]
-            else:
-                wasting_category = "Tidak Terdefinisi" # Fallback jika pred_w di luar jangkauan
+        st.markdown(f"**Kategori:** {results['wasting']['labels'][pred_w]}")
+        st.progress(pred_w / len(results['wasting']['labels']), text=f"Tingkat Risiko: {pred_w * 25}%")
+        plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
 
-            st.markdown(f"**Kategori:** {wasting_category}")
-            
-            # Hitung progres dan persentase untuk wasting
-            # Pastikan len(results['wasting']['labels']) > 0
-            if len(results['wasting']['labels']) > 0:
-                wasting_progress_value = (pred_w + 1) / len(results['wasting']['labels'])
-                wasting_percentage = wasting_progress_value * 100
-                
-                risk_text_wasting = f"Tingkat Risiko: {wasting_percentage:.0f}%"
-                if wasting_category == "Overweight" and "Tall" not in wasting_category : # Overweight juga bukan 'risiko' dalam konteks kekurangan gizi
-                     risk_text_wasting = f"Kategori Status Gizi: {wasting_category} ({wasting_percentage:.0f}%)"
-                st.progress(wasting_progress_value, text=risk_text_wasting)
-            else:
-                st.markdown("Label untuk wasting tidak terkonfigurasi dengan benar.")
-
-            plot_progress(berat, compute_ideal_weight(umur), "Berat", "kg")
-
-    # setelah Anda menghitung pred_s dan pred_w serta memiliki:
-    stunting_label = results['stunting']['labels'][pred_s]
-    
-    # Pastikan konsistensi label wasting di sini juga
-    if pred_w < len(results['wasting']['labels']):
-        wasting_label  = results['wasting']['labels'][pred_w]
-    else:
-        wasting_label = "Tidak Terdefinisi" # Fallback
-
-    #Rekomendasi
+    # Rekomendasi Medis
     st.markdown("---")
     with st.expander("📌 Rekomendasi Medis", expanded=True):
-        # cari teks rekomendasi
+        st.markdown(f"**Stunting:** {results['stunting']['labels'][pred_s]}  \n**Wasting :** {results['wasting']['labels'][pred_w]}")
         rekom_text = rekom_map.get(
-            (stunting_label, wasting_label),
-            f"Data rekomendasi tidak tersedia untuk kombinasi: Stunting ({stunting_label}), Wasting ({wasting_label}). Mohon periksa kembali label prediksi atau mapping rekomendasi."
+            (results['stunting']['labels'][pred_s], results['wasting']['labels'][pred_w]),
+            f"Data rekomendasi tidak tersedia untuk kombinasi: Stunting ({results['stunting']['labels'][pred_s]}), Wasting ({results['wasting']['labels'][pred_w]})."
         )
-        # tampilkan kategori dan rekomendasi
-        st.markdown(f"**Stunting:** {stunting_label}  \n"
-                    f"**Wasting :** {wasting_label}")
-        # gunakan styling sesuai level
-        if "berat" in rekom_text.lower() or "segera" in rekom_text.lower() or "mengkhawatirkan" in rekom_text.lower() or "sangat berat" in rekom_text.lower():
-            if "Data rekomendasi tidak tersedia" in rekom_text:
-                 st.warning(rekom_text)
-            else:
-                 st.error(rekom_text)
-        else:
-            st.info(rekom_text)
+        st.markdown(f"**Rekomendasi:** {rekom_text}", unsafe_allow_html=True)
+
+        st.markdown("<div class='disclaimer'>Disclaimer: Hasil ini masih berupa rekomendasi secara general, untuk hasil terbaik tetap membutuhkan konsultasi dengan tim medis.</div>", unsafe_allow_html=True)
 
 else:
     # Tampilan awal
     st.markdown("""
     <div style="text-align: center; padding: 2rem 1rem;">
-        <h3 style="color: #2E86C1;">
-            Platform Deteksi Dini Indikasi Stunting dan Gizi Buruk pada Anak
-        </h3>
-        <p>
-            Untuk memulai, silakan masukkan data anak Anda pada sidebar di sebelah kiri.
-        </p>
-        <p>
-            GrowUp+ akan membantu Anda memantau tumbuh kembang anak dengan menyediakan:
-        </p>
-        <ul style="
-            list-style: none;
-            padding: 0;
-            text-align: left;
-            display: inline-block;
-            margin: auto;
-        ">
+        <h3 style="color: #2E86C1;">Platform Deteksi Dini Indikasi Stunting dan Gizi Buruk pada Anak</h3>
+        <p>Untuk memulai, silakan masukkan data anak Anda pada sidebar di sebelah kiri.</p>
+        <p>GrowUp+ akan membantu Anda memantau tumbuh kembang anak dengan menyediakan:</p>
+        <ul style="list-style: none; padding: 0; text-align: left; display: inline-block; margin: auto;">
             <li>✅ Prediksi indikasi stunting</li>
             <li>✅ Deteksi masalah gizi (kurang/buruk/lebih)</li>
             <li>✅ Rekomendasi medis otomatis berbasis Machine Learning</li>
@@ -323,13 +232,7 @@ else:
     """, unsafe_allow_html=True)
 
 # Footer
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; padding: 1rem; color: #666;'>
-    <p>© 2025 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak</p>
-    <p>Dikembangkan dengan ❤️ oleh Kelompok 22</p>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<div class='footer'>© 2025 GrowUp+ - Sistem Pemantauan Tumbuh Kembang Anak<br>Dikembangkan dengan ❤️ oleh Kelompok 22</div>", unsafe_allow_html=True)
 
 # CSS tambahan untuk desain yang lebih menarik
 st.markdown(f"""
