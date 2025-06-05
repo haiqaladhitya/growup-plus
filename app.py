@@ -366,7 +366,7 @@ st.markdown(f"""
          .footer {{
             text-align: center;
             font-size: 1.2rem;
-            color: #666;
+            color: #FFFFFF;
             padding: 1rem;
             background-color: {theme['primary']};
             border-radius: 20px;
@@ -374,7 +374,7 @@ st.markdown(f"""
         
         .disclaimer {{
             font-size: 1rem;
-            color: #FFFFFF;
+            color: #E74C3C;
             font-style: italic;
             text-align: center;
         }}
