@@ -290,7 +290,7 @@ st.markdown(f"""
         }}
         
         .stProgress {{
-            background-color: {theme['secondary']};
+            background-color: {theme['primary']};
             border-radius: 20px;
         }}
 
@@ -305,7 +305,7 @@ st.markdown(f"""
             font-size: 1rem;
             color: #666;
             padding: 1rem;
-            background-color: {theme['secondary']};
+            background-color: {theme['primary']};
             border-radius: 10px;
         }}
         
