@@ -61,9 +61,12 @@ def plot_progress(actual, ideal, label, unit):
     box(msg)
     fig = px.pie(
         df, names=label, values="Nilai",
-        color_discrete_sequence=color
+        color_discrete_sequence=color,
+        height=300,
+        width=300,
+        margin=dict(t=20, b=20, l=20, r=20)
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=False)
 
 
 # mapping rekomendasi berdasarkan (Stunting, Wasting)
