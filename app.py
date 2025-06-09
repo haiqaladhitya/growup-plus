@@ -114,8 +114,8 @@ st.set_page_config(
 @st.cache_resource
 def load_models():
     return {
-        'stunting': joblib.load("best_model_stunting.joblib"),
-        'wasting': joblib.load("best_model_wasting.joblib")
+        'stunting': joblib.load("best_model_stunting_v2.joblib"),
+        'wasting': joblib.load("best_model_wasting_v2.joblib")
     }
 
 models = load_models()
