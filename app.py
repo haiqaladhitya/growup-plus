@@ -111,14 +111,16 @@ st.set_page_config(
 )
 
 # Load model
-@st.cache_resource
-def load_models():
-    return {
-        'stunting': joblib.load("best_model_stunting_v2.joblib"),
-        'wasting': joblib.load("best_model_wasting_v2.joblib")
-    }
+def load_model():
+    try:
+        with open("best_model_stunting_v2.joblib", "rb") as f:
+            model = joblib.load(f)
+        return model
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return None
 
-models = load_models()
+model = load_model(
 
 # Tema warna
 theme = {
