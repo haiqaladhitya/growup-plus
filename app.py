@@ -120,7 +120,7 @@ def load_model():
         print(f"Error loading model: {e}")
         return None
 
-model = load_model(
+model = load_model()
 
 # Tema warna
 theme = {
