@@ -17,7 +17,7 @@ def compute_ideal_height(age_months: float, gender: str) -> float:
     # median tiap tahun
     med = {1:76, 2:88, 3:95, 4:103, 5:110}
     if age_months < 12:
-        return round(50 + (26/12)*age_months, 1)  # 50→76 cm
+        return round(50 + (26/12)*age_months, 1)
     else:
         yrs = age_months / 12
         y0 = int(np.floor(yrs))
@@ -43,7 +43,6 @@ def compute_ideal_weight(age_months: float) -> float:
 
 def plot_progress(actual, ideal, label, unit):
     diff = round(ideal - actual, 1)
-    # ideal jika selisih kecil
     if abs(diff) < 0.1:
         df = pd.DataFrame({label: ["Ideal"], "Nilai": [1]})
         box, color = st.success, [theme['success']]
@@ -73,10 +72,10 @@ def plot_progress(actual, ideal, label, unit):
     
     # Menyusun ukuran pie chart
     fig.update_layout(
-        height=300,  # Ukuran tinggi pie chart yang lebih besar
-        width=500,   # Ukuran lebar pie chart yang lebih besar
+        height=300,
+        width=500, 
         margin=dict(t=20, b=20, l=10, r=10),
-        plot_bgcolor=theme['secondary'],  # Background chart yang lebih lembut
+        plot_bgcolor=theme['secondary'],
     )
     
     st.plotly_chart(fig, use_container_width=False)
@@ -202,7 +201,6 @@ if st.session_state.get('analyzed', False):
     col1, col2 = st.columns(2)
     tinggi_aktual = tinggi
     tinggi_ideal  = compute_ideal_height(umur, gender)
-    # selisih_tg    = round(tinggi_ideal - tinggi_aktual, 1) # Tidak digunakan secara langsung di sini
     
     with col1:
         st.markdown("### 📏 Hasil Prediksi Stunting")
