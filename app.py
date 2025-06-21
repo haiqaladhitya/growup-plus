@@ -295,12 +295,12 @@ st.markdown(f"""
 
         
         .stExpander {{
-            margin-bottom: 2rem;  /* Memberikan ruang bawah yang lebih besar */
-            padding: 1rem;        /* Menambahkan padding untuk memberikan ruang di dalam expander */
-            border-radius: 10px;  /* Membuat sudut lebih lembut */
-            background-color: {theme['secondary']};  /* Warna latar belakang yang lembut */
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);  /* Memberikan efek bayangan ringan untuk menonjolkan expander */
-            transition: all 0.3s ease;  /* Transisi halus saat membuka atau menutup expander */
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: {theme['secondary']};
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }}
         
         .stExpanderHeader {{
@@ -309,25 +309,24 @@ st.markdown(f"""
             color: {theme['primary']};
             display: flex;
             align-items: center;
-            justify-content: space-between;  /* Agar header dan ikon berada di sisi yang berbeda */
+            justify-content: space-between;
             cursor: pointer;
-            transition: color 0.3s ease;  /* Memberikan transisi warna yang halus saat hover */
+            transition: color 0.3s ease;
         }}
         
         .stExpanderHeader:hover {{
-            color: {theme['success']};  /* Mengubah warna header ketika hover */
+            color: {theme['success']};
         }}
         
         .stExpanderIcon {{
-            font-size: 1.5rem;  /* Membuat ikon lebih besar */
-            transition: transform 0.3s ease;  /* Transisi yang halus saat ikon berubah */
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
         }}
         
         .stExpanderIcon.expanded {{
-            transform: rotate(180deg);  /* Ikon berubah arah saat expander terbuka */
+            transform: rotate(180deg);
         }}
         
-        /* Teks di dalam expander */
         .stExpanderContent {{
             font-size: 1rem;
             color: #333;
@@ -335,22 +334,22 @@ st.markdown(f"""
         }}
         
         .stProgress {{
-            background-color: #AED6F1; /* Warna latar belakang untuk progress bar */
+            background-color: #AED6F1;
             border-radius: 20px;
             height: 30px;
         }}
         
         .stProgress>div {{
-            color: #FFFFFF; /* Warna teks untuk progres */
-            font-weight: bold; /* Membuat teks lebih tebal */
-            text-align: center; /* Menyusun teks di tengah */
-            font-size: 1rem; /* Ukuran font yang nyaman dibaca */
-            line-height: 30px; /* Menyesuaikan tinggi bar dengan teks */
+            color: #FFFFFF;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 30px;
         }}
         
         .stProgress p {{
             color: #2E86C1;
-            font-size: 1.2rem; /* Ukuran font untuk teks status */
+            font-size: 1.2rem;
             font-weight: bold;
         }}
         
